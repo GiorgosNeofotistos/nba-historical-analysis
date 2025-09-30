@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>NBA_Project.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #7a7e85;}
+.s1 { color: #bcbec4;}
+.s2 { color: #cf8e6d;}
+.s3 { color: #bcbec4;}
+.s4 { color: #6aab73;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+NBA_Project.py</font>
+</center></td></tr></table>
+<pre><span class="s0"># NBA Data Cleaning &amp; Feature Engineering</span>
+<span class="s2">import </span><span class="s1">pandas </span><span class="s2">as </span><span class="s1">pd</span>
+
+<span class="s0"># ---- Paths ----</span>
+<span class="s1">base_path </span><span class="s3">= </span><span class="s4">r&quot;C:\Users\neofo\Downloads\archive&quot;</span>
+
+<span class="s0"># ---- Load CSVs ----</span>
+<span class="s1">players </span><span class="s3">= </span><span class="s1">pd</span><span class="s3">.</span><span class="s1">read_csv</span><span class="s3">(</span><span class="s4">f&quot;</span><span class="s2">{</span><span class="s1">base_path</span><span class="s2">}\\</span><span class="s4">Players.csv&quot;</span><span class="s3">, </span><span class="s1">low_memory</span><span class="s3">=</span><span class="s2">False</span><span class="s3">)</span>
+<span class="s1">player_stats </span><span class="s3">= </span><span class="s1">pd</span><span class="s3">.</span><span class="s1">read_csv</span><span class="s3">(</span><span class="s4">f&quot;</span><span class="s2">{</span><span class="s1">base_path</span><span class="s2">}\\</span><span class="s4">PlayerStatistics.csv&quot;</span><span class="s3">, </span><span class="s1">low_memory</span><span class="s3">=</span><span class="s2">False</span><span class="s3">)</span>
+<span class="s1">games </span><span class="s3">= </span><span class="s1">pd</span><span class="s3">.</span><span class="s1">read_csv</span><span class="s3">(</span><span class="s4">f&quot;</span><span class="s2">{</span><span class="s1">base_path</span><span class="s2">}\\</span><span class="s4">Games.csv&quot;</span><span class="s3">, </span><span class="s1">low_memory</span><span class="s3">=</span><span class="s2">False</span><span class="s3">)</span>
+
+<span class="s0"># ---- Convert date columns ----</span>
+<span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'gameDate'</span><span class="s3">] = </span><span class="s1">pd</span><span class="s3">.</span><span class="s1">to_datetime</span><span class="s3">(</span><span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'gameDate'</span><span class="s3">], </span><span class="s1">errors</span><span class="s3">=</span><span class="s4">'coerce'</span><span class="s3">)</span>
+<span class="s1">games</span><span class="s3">[</span><span class="s4">'gameDate'</span><span class="s3">] = </span><span class="s1">pd</span><span class="s3">.</span><span class="s1">to_datetime</span><span class="s3">(</span><span class="s1">games</span><span class="s3">[</span><span class="s4">'gameDate'</span><span class="s3">], </span><span class="s1">errors</span><span class="s3">=</span><span class="s4">'coerce'</span><span class="s3">)</span>
+
+<span class="s0"># ---- Fill missing values ----</span>
+<span class="s1">player_stats</span><span class="s3">.</span><span class="s1">fillna</span><span class="s3">(</span><span class="s5">0</span><span class="s3">, </span><span class="s1">inplace</span><span class="s3">=</span><span class="s2">True</span><span class="s3">)</span>
+<span class="s1">games</span><span class="s3">.</span><span class="s1">fillna</span><span class="s3">(</span><span class="s5">0</span><span class="s3">, </span><span class="s1">inplace</span><span class="s3">=</span><span class="s2">True</span><span class="s3">)</span>
+
+<span class="s0"># ---- Feature Engineering ----</span>
+<span class="s0"># 1. Efficiency: (points + rebounds + assists) / minutes</span>
+<span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'efficiency'</span><span class="s3">] = (</span><span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'points'</span><span class="s3">] +</span>
+                              <span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'reboundsTotal'</span><span class="s3">] +</span>
+                              <span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'assists'</span><span class="s3">]) / </span><span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'numMinutes'</span><span class="s3">].</span><span class="s1">replace</span><span class="s3">(</span><span class="s5">0</span><span class="s3">,</span><span class="s5">1</span><span class="s3">)</span>
+
+<span class="s0"># 2. Points per Minute</span>
+<span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'points_per_min'</span><span class="s3">] = </span><span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'points'</span><span class="s3">] / </span><span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'numMinutes'</span><span class="s3">].</span><span class="s1">replace</span><span class="s3">(</span><span class="s5">0</span><span class="s3">,</span><span class="s5">1</span><span class="s3">)</span>
+
+<span class="s0"># 3. Rebound Ratio</span>
+<span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'rebound_ratio'</span><span class="s3">] = </span><span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'reboundsTotal'</span><span class="s3">] / </span><span class="s1">player_stats</span><span class="s3">[</span><span class="s4">'numMinutes'</span><span class="s3">].</span><span class="s1">replace</span><span class="s3">(</span><span class="s5">0</span><span class="s3">,</span><span class="s5">1</span><span class="s3">)</span>
+
+<span class="s0"># ---- Export cleaned &amp; feature-enhanced CSVs ----</span>
+<span class="s1">player_stats</span><span class="s3">.</span><span class="s1">to_csv</span><span class="s3">(</span><span class="s4">f&quot;</span><span class="s2">{</span><span class="s1">base_path</span><span class="s2">}\\</span><span class="s4">cleaned_PlayerStatistics.csv&quot;</span><span class="s3">, </span><span class="s1">index</span><span class="s3">=</span><span class="s2">False</span><span class="s3">)</span>
+<span class="s1">players</span><span class="s3">.</span><span class="s1">to_csv</span><span class="s3">(</span><span class="s4">f&quot;</span><span class="s2">{</span><span class="s1">base_path</span><span class="s2">}\\</span><span class="s4">cleaned_Players.csv&quot;</span><span class="s3">, </span><span class="s1">index</span><span class="s3">=</span><span class="s2">False</span><span class="s3">)</span>
+<span class="s1">games</span><span class="s3">.</span><span class="s1">to_csv</span><span class="s3">(</span><span class="s4">f&quot;</span><span class="s2">{</span><span class="s1">base_path</span><span class="s2">}\\</span><span class="s4">cleaned_Games.csv&quot;</span><span class="s3">, </span><span class="s1">index</span><span class="s3">=</span><span class="s2">False</span><span class="s3">)</span>
+
+<span class="s1">print</span><span class="s3">(</span><span class="s4">&quot;✅ CSVs cleaned, features added, and exported for BigQuery.&quot;</span><span class="s3">)</span></pre>
+</body>
+</html>
