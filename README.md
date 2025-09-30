@@ -44,6 +44,5 @@ This project was built to:
 
 ## 👤 Author
 **Georgios Neofotistos**  
-- [LinkedIn](https://www.linkedin.com/in/yourprofile)  
-- [Tableau Public](https://public.tableau.com/app/profile/yourprofile)  
-- [GitHub](https://github.com/GiorgosNeofotistos)
+- [LinkedIn](https://www.linkedin.com/in/george-neofotistos94)  
+- [GitHub](https://github.com/GiorgosNeofotistos) 
